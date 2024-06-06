@@ -116,7 +116,6 @@ public class Context implements IContext {
 
     @Override
     public Context withNextProcess(int thread) {
-        // TODO: why using process at all?
         int process = threadToProcess(thread);
         int process1 = threadCount + process;
         List<Integer> threadToProcess1 = new ArrayList<>(threadToProcess);
