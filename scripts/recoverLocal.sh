@@ -43,7 +43,7 @@ touch /var/lib/postgresql/12/main/recovery.signal
 systemctl start postgres.service
 
 # loop and sleep until  recovery.signal not deleted
-while [ -f /var/lib/postgresql/14/main/recovery.signal ]; do
+while [ -f /var/lib/postgresql/12/main/recovery.signal ]; do
     sleep 1
 done
 
