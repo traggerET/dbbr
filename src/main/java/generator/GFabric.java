@@ -22,7 +22,9 @@ public class GFabric {
         for (int i = 0; i < gens.length; i++) {
             arr.add(gens[i]);
             if (i < gens.length - 1) {
-                arr.add(synchronize(fromOp(null)));
+                Operation op = new Operation(Operation.Type.INVOKE_WITHOUT_CLIENT);
+                op.setInvokable((op1) -> {});
+                arr.add(synchronize(fromOp(op)));
             }
         }
         return new GFromList(arr);
