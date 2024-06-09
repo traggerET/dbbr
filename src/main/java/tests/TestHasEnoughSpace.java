@@ -26,7 +26,7 @@ public class TestHasEnoughSpace {
         Operation switchWalFileOperation = createSwitchWalFileOperation();
         IGenerator switchG = GFabric.fromOp(switchWalFileOperation);
 
-        IGenerator genSpam = GFabric.timeLimit(6000000000L, GFabric.cycle(GFabric.phases(updreqG, switchG)));
+        IGenerator genSpam = GFabric.timeLimit(6, GFabric.cycle(GFabric.phases(updreqG, switchG)));
 
         Operation releaseSpace = createReleaseSpaceOperation();
         IGenerator genReleaseSpace = GFabric.fromOp(releaseSpace);
