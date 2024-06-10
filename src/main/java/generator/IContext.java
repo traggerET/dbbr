@@ -16,5 +16,4 @@ public interface IContext {
     int someFreeProcess();
     Context busyThread(long time, int thread);
     Context freeThread(long time, int thread);
-    Context withNextProcess(int thread);
 }
