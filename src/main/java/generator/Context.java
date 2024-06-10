@@ -114,18 +114,6 @@ public class Context implements IContext {
         return new Context(time, (nextThreadIndex + 1) % threadCount, threadCount, allThreads, freeThreads, threadToProcess, processToThread);
     }
 
-    @Override
-    public Context withNextProcess(int thread) {
-        int process = threadToProcess(thread);
-        int process1 = threadCount + process;
-        List<Integer> threadToProcess1 = new ArrayList<>(threadToProcess);
-        threadToProcess1.set(thread, process1);
-        Map<Integer, Integer> processToThread1 = new HashMap<>(processToThread);
-        processToThread1.remove(process);
-        processToThread1.put(process1, thread);
-        return new Context(time, nextThreadIndex, threadCount, allThreads, freeThreads, threadToProcess1, processToThread1);
-    }
-
     public static Context createContext(Test test) {
         int threadCount = test.concurrency;
 
