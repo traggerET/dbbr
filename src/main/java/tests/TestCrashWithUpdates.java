@@ -109,7 +109,7 @@ public class TestCrashWithUpdates {
 
     public static void test() throws InterruptedException {
         Operation spamRequestsOperation = createSpamRequestsOperation();
-        IGenerator genSpam = GFabric.timeLimit(6000000000L, GFabric.fromOp(spamRequestsOperation));
+        IGenerator genSpam = GFabric.timeLimit(6, GFabric.cycle(GFabric.fromOp(spamRequestsOperation)));
 
         Operation killProcessOperation = createKillProcessOperation();
         IGenerator genKill = GFabric.fromOp(killProcessOperation);
