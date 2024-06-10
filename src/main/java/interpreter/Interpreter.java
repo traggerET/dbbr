@@ -42,7 +42,7 @@ public class Interpreter {
                     ctx = ctx.freeThread(time, thread);
                     gen = gen.update(test, ctx, op);
                     System.out.println(op);
-                    if (op.getRes() == Operation.Result.UNKNOWN || op.getRes() == Operation.Result.FAIL) {
+                    if (op.getRes() == Operation.Result.FAIL) {
                         for (Map.Entry<Integer, BlockingQueue<Operation>> entry : invocations.entrySet()) {
                             entry.getValue().put(new Operation(Operation.Type.EXIT));
                         }
