@@ -14,7 +14,7 @@ import util.Pair;
 public class Interpreter {
     private static final ConcurrentHashMap<String, ISession> activeClients = new ConcurrentHashMap<>();
 
-    public static void run(Test test) throws InterruptedException {
+    public static boolean run(Test test) throws InterruptedException {
         long startTime = System.nanoTime();
         IGenerator gen = test.gen;
         Context ctx = Context.createContext(test);
@@ -41,7 +41,6 @@ public class Interpreter {
                     op.setTime(time);
                     ctx = ctx.freeThread(time, thread);
                     gen = gen.update(test, ctx, op);
-                    System.out.println(op);
                     if (op.getRes() == Operation.Result.FAIL) {
                         for (Map.Entry<Integer, BlockingQueue<Operation>> entry : invocations.entrySet()) {
                             entry.getValue().put(new Operation(Operation.Type.EXIT));
@@ -49,10 +48,7 @@ public class Interpreter {
                         for (IWorker worker : workers) {
                             worker.getFuture().get();
                         }
-                        System.err.println("There is a failed operation");
-                        System.err.println(op);
-                        System.out.println("Terminating");
-                        return;
+                        return false;
                     }
                     outstanding--;
                     pollTimeout = 0;
@@ -70,8 +66,7 @@ public class Interpreter {
                             for (IWorker worker : workers) {
                                 worker.getFuture().get();
                             }
-                            System.out.println("Terminating");
-                            return;
+                            return true;
                         }
                     } else {
                         op = pair.getFirst();
@@ -188,4 +183,3 @@ public class Interpreter {
         }
     }
 }
-
