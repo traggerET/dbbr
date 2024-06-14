@@ -37,7 +37,7 @@ public class TestCrashWithUpdates {
             String queryStr = (String) operation.getExtMap().get("query");
 
             Map<String, String> values = new HashMap<>();
-            ;
+
             values.put("table", tableNames.get(tableToCheckCorruption.getAndAdd(1)));
 
             String query = StringSubstitutor.replace(queryStr, values, "{", "}");
