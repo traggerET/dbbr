@@ -55,12 +55,14 @@ public class TestHasEnoughSpace {
                     "another short and useless description4",
                     "some long and useful description5");
             try {
-                swconnection = DriverManager.getConnection(jdbcUrl, username, password);
+                if (swconnection == null ) {
+                    swconnection = DriverManager.getConnection(jdbcUrl, username, password);
+                }
                 Statement statement = swconnection.createStatement();
                 String q = "UPDATE film SET fulltext = '" +
                         fulltexts.get(ThreadLocalRandom.current().nextInt(0, fulltexts.size())) +
                         "';";
-                statement.executeQuery(q);
+                statement.executeUpdate(q);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -75,7 +77,9 @@ public class TestHasEnoughSpace {
             String username = "tihon";
             String password = "31313541";
             try {
-                spconnection = DriverManager.getConnection(jdbcUrl, username, password);
+                if (spconnection == null ) {
+                    spconnection = DriverManager.getConnection(jdbcUrl, username, password);
+                }
                 Statement statement = spconnection.createStatement();
                 statement.executeQuery("SELECT pg_switch_wal();");
             } catch (SQLException e) {
