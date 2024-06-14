@@ -16,7 +16,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TestHasEnoughSpace {
-    public static void test() throws InterruptedException {
+    private static Connection swconnection;
+    private static Connection spconnection;
+
+    public static void test() throws InterruptedException, SQLException {
         Operation occupySpace = createOccupySpaceOperation();
         IGenerator genOccupySpace = GFabric.fromOp(occupySpace);
 
@@ -26,7 +29,7 @@ public class TestHasEnoughSpace {
         Operation switchWalFileOperation = createSwitchWalFileOperation();
         IGenerator switchG = GFabric.fromOp(switchWalFileOperation);
 
-        IGenerator genSpam = GFabric.timeLimit(6, GFabric.cycle(GFabric.phases(updreqG, switchG)));
+        IGenerator genSpam = GFabric.timeLimit(6, GFabric.cycle(GFabric.phases(Arrays.asList(updreqG, switchG))));
 
         Operation releaseSpace = createReleaseSpaceOperation();
         IGenerator genReleaseSpace = GFabric.fromOp(releaseSpace);
@@ -34,6 +37,9 @@ public class TestHasEnoughSpace {
         IGenerator testGen = GFabric.then(genOccupySpace, genSpam, genReleaseSpace);
 
         Interpreter.run(new Test(testGen));
+
+        swconnection.close();
+        spconnection.close();
     }
 
     private static Operation createSwitchWalFileOperation() {
@@ -48,15 +54,13 @@ public class TestHasEnoughSpace {
                     "some long and useful description3",
                     "another short and useless description4",
                     "some long and useful description5");
-            Connection connection;
             try {
-                connection = DriverManager.getConnection(jdbcUrl, username, password);
-                Statement statement = connection.createStatement();
+                swconnection = DriverManager.getConnection(jdbcUrl, username, password);
+                Statement statement = swconnection.createStatement();
                 String q = "UPDATE film SET fulltext = '" +
                         fulltexts.get(ThreadLocalRandom.current().nextInt(0, fulltexts.size())) +
                         "';";
                 statement.executeQuery(q);
-                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -70,12 +74,10 @@ public class TestHasEnoughSpace {
             String jdbcUrl = "jdbc:postgresql://localhost:5432/dvdrental";
             String username = "tihon";
             String password = "31313541";
-            Connection connection;
             try {
-                connection = DriverManager.getConnection(jdbcUrl, username, password);
-                Statement statement = connection.createStatement();
+                spconnection = DriverManager.getConnection(jdbcUrl, username, password);
+                Statement statement = spconnection.createStatement();
                 statement.executeQuery("SELECT pg_switch_wal();");
-                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
