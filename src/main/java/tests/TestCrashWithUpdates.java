@@ -139,7 +139,7 @@ public class TestCrashWithUpdates {
                 int dId = ThreadLocalRandom.current().nextInt(0, descrs.get(tblId).getSecond().size());
                 String q = "UPDATE " + tableNames.get(tblId) + " SET + " + descrs.get(tblId).getFirst() + " = '" +
                         descrs.get(tblId).getSecond().get(dId) + "';";
-                statement.executeQuery(q);
+                statement.executeUpdate(q);
                 connection.close();
                 op1.setValue("Finished");
             } catch (SQLException e) {
